@@ -40,7 +40,7 @@ use Plenty\Modules\Plugin\DataBase\Contracts\DataBase;
 use Plenty\Modules\Plugin\DataBase\Contracts\Query;
 use Novalnet\Models\TransactionLog;
 use Plenty\Modules\Document\Models\Document;
-
+use Novalnet\Constants\NovalnetConstants;
 
 use Novalnet\Methods\NovalnetInvoicePaymentMethod;
 use Novalnet\Methods\NovalnetPrepaymentPaymentMethod;
@@ -390,7 +390,8 @@ class NovalnetServiceProvider extends ServiceProvider
 			}
 		}
 		$paymentKey = $paymentHelper->getPaymentKeyByMop($payments[0]->mopId);
-		if ($paymentKey == 'NOVALNET_INVOICE') {
+		   preg_match('#\((.*?)\)#', NovalnetConstants::PLUGIN_VERSION, $match);
+		if ($paymentKey == 'NOVALNET_INVOICE' && $match[1] >= '2.0.8') {
 		try {
 			    	$db_details = $paymentService->getDatabaseValues($order->id);
 				$bank_details = array_merge($db_details, json_decode($invoiceDetails, true));
